@@ -1,0 +1,20 @@
+<svg width="840" height="220" viewBox="0 0 840 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">JOT Wellness logo</title>
+  <desc id="desc">Premium JOT Wellness logo with circular child development ecosystem mark.</desc>
+  <rect width="840" height="220" fill="transparent"/>
+  <g transform="translate(22 18)">
+    <circle cx="92" cy="92" r="84" fill="#F8F3EA" stroke="#C9A96E" stroke-width="5"/>
+    <path d="M43 94C43 67.2 65.2 45 92 45C118.8 45 141 67.2 141 94" stroke="#7BA882" stroke-width="9" stroke-linecap="round"/>
+    <path d="M48 119C58.8 139.6 74.2 150 92 150C109.8 150 125.2 139.6 136 119" stroke="#1A2E1A" stroke-width="8" stroke-linecap="round"/>
+    <path d="M97 37C116.7 19.2 139.7 17 161 30C156.8 55.6 137.2 69.5 108 67.6C104.9 57.1 101.4 47.1 97 37Z" fill="#7BA882"/>
+    <path d="M108 67.6C121.6 50.4 137 39 161 30" stroke="#FDFCF9" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="56" cy="88" r="8" fill="#1A2E1A"/>
+    <circle cx="128" cy="88" r="8" fill="#1A2E1A"/>
+    <text x="92" y="113" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="54" font-weight="700" letter-spacing="-3" fill="#1A2E1A">JOT</text>
+  </g>
+  <g transform="translate(236 54)">
+    <text x="0" y="54" font-family="Cormorant Garamond, Georgia, serif" font-size="72" font-weight="700" letter-spacing="-2" fill="#1A2E1A">JOT Wellness</text>
+    <path d="M2 74H468" stroke="#C9A96E" stroke-width="2"/>
+    <text x="0" y="111" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="4.5" fill="#4A5E4A">WHOLE CHILD DEVELOPMENT ECOSYSTEM</text>
+  </g>
+</svg>

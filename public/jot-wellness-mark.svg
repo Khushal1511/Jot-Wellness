@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">JOT Wellness brand mark</title>
+  <desc id="desc">A premium circular JOT monogram with caring orbit and growth leaf.</desc>
+  <rect width="512" height="512" rx="128" fill="#FDFCF9"/>
+  <circle cx="256" cy="256" r="185" fill="#F8F3EA" stroke="#C9A96E" stroke-width="10"/>
+  <path d="M150 260C150 201.5 197.5 154 256 154C314.5 154 362 201.5 362 260" stroke="#7BA882" stroke-width="18" stroke-linecap="round"/>
+  <path d="M156 309C178.5 351.5 211.8 373 256 373C300.2 373 333.5 351.5 356 309" stroke="#1A2E1A" stroke-width="15" stroke-linecap="round"/>
+  <path d="M265 136C306 99 354 94 399 121C390 174 349 203 288 199C281 177 274 157 265 136Z" fill="#7BA882"/>
+  <path d="M288 199C316 163 348 139 399 121" stroke="#FDFCF9" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="180" cy="245" r="18" fill="#1A2E1A"/>
+  <circle cx="332" cy="245" r="18" fill="#1A2E1A"/>
+  <text x="256" y="291" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="116" font-weight="700" letter-spacing="-6" fill="#1A2E1A">JOT</text>
+</svg>
