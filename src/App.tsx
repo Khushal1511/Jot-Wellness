@@ -228,12 +228,12 @@ const pillars = [
   },
 ];
 
-const processSteps = [
-  ["01", "Discovery Consultation", "We understand concerns, goals, strengths, routines, school context, and the kind of support your family or school needs.", "Free first step"],
-  ["02", "Comprehensive Assessment", "A qualified professional studies developmental needs, participation barriers, priorities, and real-world outcomes.", "Structured review"],
-  ["03", "Personalized Roadmap", "You receive a written plan with clear goals, responsibilities, timelines, and outcome measures.", "Clear direction"],
-  ["04", "Coordinated Delivery", "Therapists, educators, parents, and schools work from one shared roadmap instead of separate recommendations.", "One team"],
-  ["05", "Progress Review", "Progress is tracked, discussed, documented, and refined so support remains honest and accountable.", "Every month"],
+const processSteps: Array<{ number: string; icon: IconName; title: string; text: string; duration: string }> = [
+  { number: "01", icon: "phone",   title: "Discovery Consultation", text: "We understand concerns, goals, strengths, routines, school context, and the kind of support your family or school needs.", duration: "Free first step" },
+  { number: "02", icon: "shield",  title: "Comprehensive Assessment", text: "A qualified professional studies developmental needs, participation barriers, priorities, and real-world outcomes.", duration: "Structured review" },
+  { number: "03", icon: "book",    title: "Personalized Roadmap", text: "You receive a written plan with clear goals, responsibilities, timelines, and outcome measures.", duration: "Clear direction" },
+  { number: "04", icon: "home",    title: "Coordinated Delivery", text: "Therapists, educators, parents, and schools work from one shared roadmap instead of separate recommendations.", duration: "One team" },
+  { number: "05", icon: "chart",   title: "Progress Review", text: "Progress is tracked, discussed, documented, and refined so support remains honest and accountable.", duration: "Every month" },
 ];
 
 const testimonials = [
@@ -860,13 +860,13 @@ function ProcessTimeline() {
           <motion.h2 variants={fadeUp} className="display-title mt-5 text-[var(--inverse)]">From first call to lasting transformation.</motion.h2>
         </motion.div>
         <div className="horizontal-timeline mt-14" aria-label="JOT Wellness process timeline">
-          {processSteps.map(([number, title, text, duration]) => (
-            <article key={number} className="step-card">
-              <span className="step-number">{number}</span>
-              <Icon name={number === "01" ? "phone" : number === "04" ? "home" : number === "05" ? "chart" : "book"} className="h-10 w-10 text-[var(--sage)]" />
-              <h3>{title}</h3>
-              <p>{text}</p>
-              <small>{duration}</small>
+          {processSteps.map((step) => (
+            <article key={step.number} className="step-card">
+              <span className="step-number">{step.number}</span>
+              <Icon name={step.icon} className="h-10 w-10 text-[var(--sage)]" />
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+              <small>{step.duration}</small>
             </article>
           ))}
         </div>
@@ -917,7 +917,9 @@ function Testimonials() {
         <p className="eyebrow">Parent Stories</p>
         <h2 className="display-title mt-5">Hope becomes real when progress enters daily life.</h2>
         <div className="testimonial-shell mt-14">
-          <button aria-label="Previous testimonial" onClick={() => setActive((active + testimonials.length - 1) % testimonials.length)}>-</button>
+          <button aria-label="Previous testimonial" onClick={() => setActive((active + testimonials.length - 1) % testimonials.length)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
           <AnimatePresence mode="wait">
             <motion.article key={testimonial.author} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ duration: 0.45 }}>
               <span className="giant-quote">"</span>
@@ -932,7 +934,9 @@ function Testimonials() {
               </div>
             </motion.article>
           </AnimatePresence>
-          <button aria-label="Next testimonial" onClick={() => setActive((active + 1) % testimonials.length)}>+</button>
+          <button aria-label="Next testimonial" onClick={() => setActive((active + 1) % testimonials.length)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
         <div className="mt-8 flex justify-center gap-3">
           {testimonials.map((item, index) => (
@@ -967,12 +971,14 @@ function MagazineGrid({ posts = featuredBlogPosts }: { posts?: BlogPost[] }) {
       {posts.map((post, index) => (
         <article
           key={post.slug}
+          role="button"
           className={`article-card article-${(index % 4) + 1}`}
           onClick={() => navigateToBlogPost(post.slug)}
           tabIndex={0}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") navigateToBlogPost(post.slug);
           }}
+          aria-label={`Read article: ${post.title}`}
         >
           <img src={post.image} alt={post.imageAlt} />
           <div>
@@ -1133,7 +1139,7 @@ function TherapistTeam() {
           {therapists.map(([name, role, license, exp], index) => (
             <article key={name} className="therapist-card">
               <img src={[images.child, images.therapy, images.classroom, images.parent][index]} alt={name} />
-              <div><h3>{name}</h3><p>{role}</p><span>{license}</span><strong>{exp}</strong><button>View Profile -&gt;</button></div>
+              <div><h3>{name}</h3><p>{role}</p><span>{license}</span><strong>{exp}</strong><button onClick={() => navigateTo("contact")}>Book Session -&gt;</button></div>
             </article>
           ))}
         </div>
@@ -1265,7 +1271,7 @@ function BlogPage({ slug }: { slug?: string }) {
           {filteredPosts.length ? <MagazineGrid posts={filteredPosts} /> : <EmptyBlogState query={query} category={category} />}
         </div>
       </section>
-      <section className="section-pad bg-[var(--ivory)]"><div className="mx-auto max-w-[1180px] px-5 lg:px-8"><p className="eyebrow">Free Parent Resources</p><h2 className="display-title mt-5">Download tools for calmer next steps.</h2><div className="mt-12 grid gap-5 md:grid-cols-3">{resources.map((resource) => <article className="resource-card" key={resource}><div>PDF</div><h3>{resource}</h3><p>Actionable guidance from the JOT Wellness clinical team.</p><button>Download -&gt;</button></article>)}</div></div></section>
+      <section className="section-pad bg-[var(--ivory)]"><div className="mx-auto max-w-[1180px] px-5 lg:px-8"><p className="eyebrow">Free Parent Resources</p><h2 className="display-title mt-5">Download tools for calmer next steps.</h2><div className="mt-12 grid gap-5 md:grid-cols-3">{resources.map((resource) => <article className="resource-card" key={resource}><div>PDF</div><h3>{resource}</h3><p>Actionable guidance from the JOT Wellness clinical team.</p><a href={getWhatsAppUrl(`Hello JOT Wellness, I would like the free resource: "${resource}".`)} target="_blank" rel="noreferrer" className="inline-flex">Request PDF -&gt;</a></article>)}</div></div></section>
     </>
   );
 }
@@ -1344,7 +1350,7 @@ function ContactPage() {
         <div className="mx-auto grid max-w-[1520px] gap-8 px-5 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
           <div className="contact-card featured"><h2>Schedule Consultation</h2><AssessmentForm source="contact-assessment" /></div>
           <div className="grid gap-8">
-            <div className="contact-card"><h2>General Inquiry</h2><p className="lead-copy">Ask about Guided Growth™, Holding Canvas™, individual therapy services, locations, or school partnerships.</p><button className="btn-forest mt-5">Send Inquiry -&gt;</button></div>
+            <div className="contact-card"><h2>General Inquiry</h2><p className="lead-copy">Ask about Guided Growth™, Holding Canvas™, individual therapy services, locations, or school partnerships.</p><a className="btn-forest mt-5 inline-flex" href={getWhatsAppUrl("Hello JOT Wellness, I have a general inquiry about your services.")} target="_blank" rel="noreferrer">Send Inquiry -&gt;</a></div>
             <div className="contact-card"><h2>Direct Contact</h2><a href="tel:+917503191998">+91 75031 91998</a><a href="mailto:hello.jotwellness@gmail.com">hello.jotwellness@gmail.com</a><a href={getWhatsAppUrl("Hello JOT Wellness, I want to connect with your care team.")} target="_blank" rel="noreferrer">WhatsApp us</a></div>
           </div>
         </div>
@@ -1419,7 +1425,29 @@ function AssessmentForm({ source, inverse = false }: { source: string; inverse?:
 }
 
 function FloatingInput({ label, name, value, onChange, type = "text" }: { label: string; name: keyof LeadForm; value: string; onChange: (event: ChangeEvent<HTMLInputElement>) => void; type?: string }) {
-  return <label className="floating-input"><input name={name} value={value} onChange={onChange} type={type} placeholder=" " required /><span>{label}</span></label>;
+  const extraProps: React.InputHTMLAttributes<HTMLInputElement> = {};
+  if (type === "tel") {
+    extraProps.pattern = "[0-9+\\-\\s]{7,15}";
+    extraProps.minLength = 7;
+    extraProps.maxLength = 15;
+    extraProps.title = "Enter a valid phone number (7–15 digits)";
+  }
+  if (name === "childName" || name === "parentName") {
+    extraProps.minLength = 2;
+    extraProps.maxLength = 60;
+  }
+  if (name === "age") {
+    extraProps.inputMode = "numeric";
+    extraProps.pattern = "[0-9]{1,2}";
+    extraProps.title = "Enter age in years (e.g. 5)";
+    extraProps.maxLength = 2;
+  }
+  return (
+    <label className="floating-input">
+      <input name={name} value={value} onChange={onChange} type={type} placeholder=" " required {...extraProps} />
+      <span>{label}</span>
+    </label>
+  );
 }
 
 function PageHero({ eyebrow, title, text, image }: { eyebrow: string; title: string; text: string; image: string }) {
@@ -1446,11 +1474,33 @@ function BrandLogo({ inverse = false }: { inverse?: boolean }) {
 }
 
 function Footer({ navigate }: { navigate: (page: PageKey) => void }) {
+  const year = new Date().getFullYear();
   return (
     <footer className="footer-dark noise-overlay">
       <div className="mx-auto grid max-w-[1520px] gap-12 px-5 py-16 lg:grid-cols-[0.45fr_0.55fr] lg:px-8">
-        <div><BrandLogo inverse /><p className="mt-6 max-w-md leading-8 text-white/66">One Team. One Plan. Real Outcomes.</p></div>
-        <div className="grid gap-8 sm:grid-cols-3"><FooterColumn title="Explore" items={navItems.slice(0, 4)} navigate={navigate} /><FooterColumn title="Support" items={navItems.slice(4)} navigate={navigate} /><div><h3>Locations</h3><p>East Delhi<br />South Delhi<br />Noida<br />Gurugram<br />Ghaziabad</p></div></div>
+        <div>
+          <BrandLogo inverse />
+          <p className="mt-6 max-w-md leading-8 text-white/66">One Team. One Plan. Real Outcomes.</p>
+          <div className="mt-6 flex items-center gap-4">
+            <a href="tel:+917503191998" className="text-sm text-white/55 hover:text-[var(--gold)] transition-colors">+91 75031 91998</a>
+            <span className="text-white/24">|</span>
+            <a href="mailto:hello.jotwellness@gmail.com" className="text-sm text-white/55 hover:text-[var(--gold)] transition-colors">hello.jotwellness@gmail.com</a>
+          </div>
+        </div>
+        <div className="grid gap-8 sm:grid-cols-3">
+          <FooterColumn title="Explore" items={navItems.slice(0, 4)} navigate={navigate} />
+          <FooterColumn title="Support" items={navItems.slice(4)} navigate={navigate} />
+          <div>
+            <h3>Locations</h3>
+            <p>East Delhi<br />South Delhi<br />Noida<br />Gurugram<br />Ghaziabad</p>
+          </div>
+        </div>
+      </div>
+      <div className="border-t border-white/10 px-5 py-5 lg:px-8">
+        <div className="mx-auto flex max-w-[1520px] flex-col items-center justify-between gap-3 text-xs text-white/38 sm:flex-row">
+          <span>&copy; {year} JOT Wellness. All rights reserved.</span>
+          <span>RCI Reg. No. B86705 &nbsp;|&nbsp; BACB-USA Certified &nbsp;|&nbsp; Karamveer Chakra Award Recipient</span>
+        </div>
       </div>
     </footer>
   );
@@ -1467,13 +1517,22 @@ function FloatingWhatsApp() {
 function CustomCursor() {
   const [position, setPosition] = useState({ x: -100, y: -100 });
   const [active, setActive] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
+
   useEffect(() => {
+    // Detect touch device on mount — don't mount listeners for touch-only devices
+    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
+      setIsTouch(true);
+      return;
+    }
     const move = (event: MouseEvent) => setPosition({ x: event.clientX, y: event.clientY });
     const over = (event: MouseEvent) => setActive(Boolean((event.target as HTMLElement).closest("a,button,input,select,summary")));
     window.addEventListener("mousemove", move);
     window.addEventListener("mouseover", over);
     return () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseover", over); };
   }, []);
+
+  if (isTouch) return null;
   return <div className={`custom-cursor ${active ? "active" : ""}`} style={{ "--x": `${position.x}px`, "--y": `${position.y}px` } as CSSProperties} aria-hidden="true"><span /></div>;
 }
 
