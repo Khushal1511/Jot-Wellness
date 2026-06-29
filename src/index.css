@@ -2539,3 +2539,55 @@ body {
     bottom: 4% !important;
   }
 }
+
+/* ── Testimonial nav button: reset font-size now that buttons contain SVGs ── */
+.testimonial-shell > button {
+  font-size: 1rem;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.testimonial-shell > button:hover {
+  background: var(--forest-2);
+  transform: scale(1.08);
+}
+
+/* ── Footer copyright bar ── */
+.footer-copyright {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-copyright span {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.76rem;
+}
+
+.footer-dark a {
+  transition: color 180ms ease;
+}
+
+.footer-dark a:hover {
+  color: var(--gold);
+}
+
+/* ── Resource card: anchor styled as button ── */
+.resource-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  border: 1.5px solid var(--forest);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--forest);
+  text-decoration: none;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.resource-card a:hover {
+  background: var(--forest);
+  color: var(--ivory);
+}
