@@ -12,7 +12,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db, isFirebaseConfigured } from "./lib/firebase";
 import { blogCategories, blogPosts, featuredBlogPosts, formatBlogDate, getBlogPostBySlug, type BlogPost } from "./lib/blog";
 
-type PageKey = "home" | "services" | "guided-growth" | "about" | "blog" | "contact" | "faq";
+type PageKey = "home" | "services" | "guided-growth" | "holding-canvas" | "about" | "blog" | "contact" | "faq";
 type AppRoute = { page: PageKey; slug?: string };
 type IconName = "network" | "speech" | "hands" | "book" | "ripple" | "heart" | "school" | "shield" | "home" | "chart" | "phone" | "star";
 
@@ -36,7 +36,7 @@ type LeadForm = {
   time: string;
 };
 
-const WHATSAPP_NUMBER = "919999999999";
+const WHATSAPP_NUMBER = "917503191998";
 
 const images = {
   family:
@@ -58,27 +58,33 @@ const images = {
 const pageMeta: Record<PageKey, { label: string; title: string; description: string }> = {
   home: {
     label: "Home",
-    title: "JOT Wellness | Premium Home Therapy Ecosystem Delhi NCR",
+    title: "JOT Wellness | One Team. One Plan. Real Outcomes.",
     description:
-      "JOT Wellness delivers licensed, coordinated child development therapy at home across Delhi NCR with Guided Growth, parent coaching, and measurable outcomes.",
+      "JOT Wellness is an outcome-based child development and inclusion system offering Guided Growth, Holding Canvas, and individual therapy services across Delhi NCR.",
   },
   services: {
-    label: "Services",
-    title: "Services | JOT Wellness",
+    label: "Therapies",
+    title: "Individual Therapy Services | JOT Wellness",
     description:
-      "Explore behavior therapy, speech therapy, occupational therapy, special education, sensory integration, counseling, and school integration at home.",
+      "Specialized speech therapy, occupational therapy, special education, behaviour support, psychology, and play-based interventions with measurable goals.",
   },
   "guided-growth": {
     label: "Guided Growth",
-    title: "Guided Growth | JOT Wellness",
+    title: "Guided Growth | Outcome-Based Child Development System",
     description:
-      "A complete 12-month coordinated transformation program for children and families across Delhi NCR.",
+      "India's first outcome-based home-delivered child development system: one child, one program owner, one personalized roadmap.",
+  },
+  "holding-canvas": {
+    label: "Holding Canvas",
+    title: "Holding Canvas | School Inclusion Ecosystem",
+    description:
+      "A school-embedded inclusion ecosystem aligning students, teachers, families, specialists, and leadership around measurable student success.",
   },
   about: {
-    label: "About",
-    title: "About Khushal Singh | JOT Wellness",
+    label: "Founder",
+    title: "Khushal Singh | Founder & Clinical Director",
     description:
-      "Meet Khushal Singh, founder and clinical director of JOT Wellness, building India's coordinated child development system.",
+      "Meet Khushal Singh, RCI Licensed Special Educator, BACB-USA ABA Certified professional, Karamveer Chakra award recipient, and founder of JOT Wellness.",
   },
   blog: {
     label: "Blog",
@@ -87,8 +93,8 @@ const pageMeta: Record<PageKey, { label: string; title: string; description: str
   },
   contact: {
     label: "Contact",
-    title: "Book Free Assessment | JOT Wellness",
-    description: "Book a free child development assessment, contact JOT Wellness, or connect on WhatsApp across Delhi NCR.",
+    title: "Schedule Consultation | JOT Wellness",
+    description: "Book a discovery consultation for Guided Growth, Holding Canvas, or individual therapy services across Delhi NCR.",
   },
   faq: {
     label: "FAQ",
@@ -99,19 +105,20 @@ const pageMeta: Record<PageKey, { label: string; title: string; description: str
 
 const navItems: Array<{ key: PageKey; label: string }> = [
   { key: "home", label: "Home" },
-  { key: "services", label: "Services" },
   { key: "guided-growth", label: "Guided Growth" },
-  { key: "about", label: "About" },
-  { key: "blog", label: "Blog" },
+  { key: "holding-canvas", label: "Holding Canvas" },
+  { key: "services", label: "Therapies" },
+  { key: "about", label: "Founder" },
+  { key: "blog", label: "Resources" },
   { key: "contact", label: "Contact" },
   { key: "faq", label: "FAQ" },
 ];
 
 const metrics: Array<{ value: number; suffix: string; label: string } | { text: string; label: string }> = [
-  { value: 800, suffix: "+", label: "Families Served" },
-  { value: 5, suffix: "+", label: "Years Excellence" },
-  { value: 100, suffix: "%", label: "Licensed Experts" },
-  { text: "Delhi NCR", label: "Doorstep Service" },
+  { value: 1200, suffix: "+", label: "Families Served" },
+  { value: 7, suffix: "+", label: "Years Leadership" },
+  { value: 100, suffix: "%", label: "Outcome-Focused" },
+  { text: "Delhi NCR", label: "Home & School Support" },
 ];
 
 const services: Service[] = [
@@ -222,48 +229,47 @@ const pillars = [
 ];
 
 const processSteps = [
-  ["01", "Free 15-Minute Call", "Tell us about your child. No obligation. We recommend the right path forward.", "15 minutes"],
-  ["02", "Licensed Evaluation", "A certified therapist conducts a formal assessment at your home.", "60-90 minutes"],
-  ["03", "Your Child's Blueprint", "A customized recommendation: A La Carte, Hybrid, or Guided Growth.", "Within 48 hours"],
-  ["04", "Doorstep Therapy Starts", "Licensed support begins at home with flexible scheduling and parent coaching.", "Your convenience"],
-  ["05", "Measurable Outcomes", "Monthly reports, milestone celebrations, and parent confidence tracking.", "Every month"],
+  ["01", "Discovery Consultation", "We understand concerns, goals, strengths, routines, school context, and the kind of support your family or school needs.", "Free first step"],
+  ["02", "Comprehensive Assessment", "A qualified professional studies developmental needs, participation barriers, priorities, and real-world outcomes.", "Structured review"],
+  ["03", "Personalized Roadmap", "You receive a written plan with clear goals, responsibilities, timelines, and outcome measures.", "Clear direction"],
+  ["04", "Coordinated Delivery", "Therapists, educators, parents, and schools work from one shared roadmap instead of separate recommendations.", "One team"],
+  ["05", "Progress Review", "Progress is tracked, discussed, documented, and refined so support remains honest and accountable.", "Every month"],
 ];
 
 const testimonials = [
   {
     quote:
-      "My child went from avoiding every routine to communicating what he needed. JOT Wellness did not just change therapy. They changed how our family understood him.",
-    author: "Priya Sharma",
-    role: "Mother of Aryan, 4 years",
-    outcome: "Now attends mainstream preschool",
+      "For the first time, everyone involved in my child's development was working together. We finally had clarity, direction, and confidence.",
+    author: "Parent",
+    role: "Guided Growth™",
+    outcome: "One roadmap and visible progress",
   },
   {
     quote:
-      "We were running between providers with no single direction. Guided Growth gave us one roadmap, one team, and progress we could finally see.",
-    author: "Ritika Mehra",
-    role: "Parent, Gurugram",
-    outcome: "Clear communication and calmer transitions",
+      "The difference wasn't more therapy. The difference was coordination. We stopped feeling lost.",
+    author: "Parent",
+    role: "Guided Growth™",
+    outcome: "Reduced confusion and stronger home routines",
   },
   {
     quote:
-      "The parent coaching was the difference. We learned what to do at home, what to ask the school, and how to celebrate small steps.",
-    author: "Aman Kapoor",
-    role: "Father, Noida",
-    outcome: "Greater independence at home",
+      "Holding Canvas transformed the way our school approached inclusion. Teachers felt supported, parents felt heard, and students benefited.",
+    author: "School Leader",
+    role: "Holding Canvas™",
+    outcome: "Better classroom alignment",
   },
 ];
 
 
 const therapists = [
-  ["Aarav Mehta", "Behavior Specialist", "BACB Certified", "6 years experience"],
-  ["Naina Suri", "Speech Therapist", "RCI Verified", "8 years experience"],
-  ["Meera Rao", "Occupational Therapist", "RCI Verified", "7 years experience"],
-  ["Devika Anand", "Special Educator", "RCI Verified", "9 years experience"],
+  ["Speech & Language Team", "Communication, language, speech clarity, social communication", "Qualified Professionals", "Goal-based plans"],
+  ["Occupational Therapy Team", "Sensory processing, motor development, daily living skills", "Qualified Professionals", "Participation-focused"],
+  ["Special Education Team", "Learning strategies, literacy, numeracy, executive functioning", "RCI-Aligned Expertise", "School-ready support"],
+  ["Psychology & Behaviour Team", "Regulation, emotional well-being, counselling, behaviour support", "Evidence-Informed", "Family partnership"],
 ];
 
 const resources = ["School readiness checklist", "Sensory routine planner", "Parent confidence tracker"];
 
-const guidedSteps = ["Assessment", "Planning", "Implementation", "Family Coaching", "Progress Tracking", "Outcome Measurement"];
 
 const faqTabs = [
   {
@@ -382,8 +388,8 @@ export default function App() {
       description: pageMeta.home.description,
       areaServed: ["New Delhi", "Gurugram", "Noida", "Faridabad"],
       founder: { "@type": "Person", name: "Khushal Singh" },
-      slogan: "Supporting the Whole Child. Empowering the Whole Family.",
-      contactPoint: { "@type": "ContactPoint", telephone: "+91 99999 99999", contactType: "customer support" },
+      slogan: "One Team. One Plan. Real Outcomes.",
+      contactPoint: { "@type": "ContactPoint", telephone: "+91 75031 91998", contactType: "customer support" },
     };
     let script = document.getElementById("jot-schema") as HTMLScriptElement | null;
     if (!script) {
@@ -401,6 +407,8 @@ export default function App() {
         return <ServicesPage />;
       case "guided-growth":
         return <GuidedGrowthPage />;
+      case "holding-canvas":
+        return <HoldingCanvasPage />;
       case "about":
         return <AboutPage />;
       case "blog":
@@ -495,7 +503,7 @@ function Header({ route, navigate }: { route: PageKey; navigate: (page: PageKey)
             </div>
           </div>
           <button className="btn-gold btn-arrow" onClick={() => handleNav("contact")}>
-            Book Free Assessment <span className="arrow-icon">-&gt;</span>
+            Schedule Consultation <span className="arrow-icon">-&gt;</span>
           </button>
         </div>
 
@@ -534,8 +542,8 @@ function Header({ route, navigate }: { route: PageKey; navigate: (page: PageKey)
                 <p className="micro-label text-[var(--gold)]">Quick Access</p>
                 <div className="mt-5 grid gap-3 text-sm font-semibold text-white/80">
                   <button className="text-left" onClick={() => handleNav("contact")}>Book assessment</button>
-                  <a href="tel:+919999999999">Call now</a>
-                  <a href={getWhatsAppUrl("Hello JOT Wellness, I want to book an assessment.")} target="_blank" rel="noreferrer">WhatsApp us</a>
+                  <a href="tel:+917503191998">Call now</a>
+                  <a href={getWhatsAppUrl("Hello JOT Wellness, I want to schedule a consultation.")} target="_blank" rel="noreferrer">WhatsApp us</a>
                 </div>
                 <div className="mt-7 rounded-3xl border border-[var(--gold)]/30 bg-white/8 p-5">
                   <p className="font-display text-3xl text-[var(--gold)]">Guided Growth</p>
@@ -560,7 +568,7 @@ function Header({ route, navigate }: { route: PageKey; navigate: (page: PageKey)
                 </motion.button>
               ))}
               <motion.button variants={fadeUp} className="btn-gold mt-8" onClick={() => handleNav("contact")}>
-                Book Free Assessment -&gt;
+                Schedule Consultation -&gt;
               </motion.button>
             </motion.nav>
           </motion.div>
@@ -588,7 +596,7 @@ function HomePage() {
 }
 
 function HeroSection() {
-  const words = ["Transforming", "Children's", "Lives", "At", "Your", "Doorstep."];
+  const words = ["One", "Team.", "One", "Plan.", "Real", "Outcomes."];
 
   return (
     <section className="hero-section noise-overlay">
@@ -596,31 +604,34 @@ function HeroSection() {
       <div className="hero-grid mx-auto grid min-h-screen max-w-[1520px] items-center gap-12 px-5 pt-28 lg:grid-cols-[1.08fr_0.92fr] lg:px-8">
         <motion.div variants={stagger} initial="hidden" animate="visible" className="relative z-10 max-w-4xl">
           <motion.p variants={cardReveal} className="hero-badge">
-            India's First Coordinated Home Therapy Ecosystem
+            India's First Outcome-Based Transformation System
           </motion.p>
-          <motion.h1 className="hero-headline mt-8" aria-label="Transforming Children's Lives At Your Doorstep">
+          <motion.h1 className="hero-headline mt-8" aria-label="One Team. One Plan. Real Outcomes.">
             {words.map((word, index) => (
-              <motion.span key={word} variants={fadeUp} className={word === "Children's" || word === "Lives" ? "gold-italic" : ""}>
+              <motion.span key={`${word}-${index}`} variants={fadeUp} className={word === "Real" || word === "Outcomes." ? "gold-italic" : ""}>
                 {word}{index < words.length - 1 ? " " : ""}
               </motion.span>
             ))}
           </motion.h1>
           <motion.p variants={fadeUp} className="mt-7 max-w-2xl text-lg leading-8 text-white/78 md:text-xl">
-            Licensed therapists. Coordinated care. Home-delivered across Delhi NCR for autistic, ADHD, neurodivergent, and differently-abled children.
+            Your child doesn't need more disconnected sessions. They need one coordinated team, one written plan, and outcomes that show up in everyday life.
+          </motion.p>
+          <motion.p variants={fadeUp} className="mt-4 max-w-2xl text-base leading-7 text-white/66">
+            Guided Growth™ for families. Holding Canvas™ for schools. Individual therapies for focused support. All coordinated. All outcome-driven.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4 text-sm font-semibold uppercase tracking-[0.14em] text-white/70">
-            <span>800+ families</span>
+            <span>1200+ families</span>
             <span className="text-[var(--gold)]">/</span>
-            <span>100% licensed</span>
+            <span>RCI + BACB-USA expertise</span>
             <span className="text-[var(--gold)]">/</span>
-            <span>5+ years</span>
+            <span>7+ years</span>
           </motion.div>
           <motion.div variants={fadeUp} className="mt-10 flex flex-col gap-4 sm:flex-row">
             <button className="btn-gold btn-arrow" onClick={scrollToAssessment}>
-              Book Free Assessment <span className="arrow-icon">-&gt;</span>
+              Schedule Consultation <span className="arrow-icon">-&gt;</span>
             </button>
-            <button className="btn-ghost btn-arrow" onClick={() => navigateTo("about")}>
-              Watch Our Story <span className="arrow-icon">play</span>
+            <button className="btn-ghost btn-arrow" onClick={() => navigateTo("guided-growth")}>
+              Explore Programs <span className="arrow-icon">-&gt;</span>
             </button>
           </motion.div>
           <motion.button variants={fadeUp} className="scroll-indicator" onClick={() => document.getElementById("trust")?.scrollIntoView({ behavior: "smooth" })}>
@@ -631,11 +642,11 @@ function HeroSection() {
 
         <motion.div className="hero-visual" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.6 }}>
           <div className="dot-grid" />
-          <img src={images.therapy} alt="Therapist working with child at home" className="hero-circle" />
-          <FloatingCard className="left-0 top-[16%]" title="800+" text="Families" />
-          <FloatingCard className="right-2 top-[24%] delay-200" title="100%" text="Licensed" />
-          <FloatingCard className="bottom-[12%] left-[12%] delay-500" title="RCI" text="Verified care" />
-          <div className="credential-badge">Karamveer Chakra Awardee</div>
+          <img src={images.founder} alt="Khushal Singh speaking about inclusion and child development" className="hero-circle" />
+          <FloatingCard className="left-0 top-[16%]" title="1200+" text="Families" />
+          <FloatingCard className="right-2 top-[24%] delay-200" title="1" text="Unified plan" />
+          <FloatingCard className="bottom-[12%] left-[12%] delay-500" title="RCI" text="Licensed expertise" />
+          <div className="credential-badge">Karamveer Chakra Award Recipient</div>
         </motion.div>
       </div>
     </section>
@@ -730,22 +741,22 @@ function AboutPreview() {
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.35 }}>
           <motion.p variants={fadeUp} className="eyebrow">Meet the Founder</motion.p>
           <motion.h2 variants={fadeUp} className="display-title mt-5">
-            Khushal Singh, the architect of India's first coordinated child development system.
+            Khushal Singh, building outcome-based systems for child development and inclusion.
           </motion.h2>
           <motion.p variants={fadeUp} className="lead-copy mt-7">
-            JOT Wellness was created from a simple but powerful belief: a child's transformation belongs to coordination, not isolated appointments. Under Khushal Singh's leadership, families receive one accountable pathway across therapy, school, home, and long-term independence.
+            After 7+ years across special education, inclusion, ABA-informed support, families, schools, and multidisciplinary teams, Khushal Singh built JOT Wellness around one belief: fragmentation is the enemy of progress; coordination is the architecture of transformation.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
-            {["Karamveer Chakra", "BACB-USA", "RCI B86705", "800+ served"].map((item) => (
+            {["Karamveer Chakra", "BACB-USA ABA Certified", "RCI Licensed", "1200+ families"].map((item) => (
               <span key={item} className="credential-pill">{item}</span>
             ))}
           </motion.div>
           <motion.blockquote variants={fadeUp} className="quote-block mt-10">
-            "A child's transformation belongs to no single therapy. It belongs to coordination."
+            "Fragmentation is the enemy of progress. Coordination is the architecture of transformation."
             <span>Khushal Singh</span>
           </motion.blockquote>
           <motion.button variants={fadeUp} className="btn-forest btn-arrow mt-9" onClick={() => navigateTo("about")}>
-            Read Khushal's Full Story <span className="arrow-icon">-&gt;</span>
+            Meet The Founder <span className="arrow-icon">-&gt;</span>
           </motion.button>
         </motion.div>
       </div>
@@ -758,20 +769,20 @@ function ServicesEcosystem() {
     <section className="section-pad section-dark noise-overlay text-[var(--inverse)]">
       <div className="mx-auto max-w-[1520px] px-5 lg:px-8">
         <motion.div className="max-w-4xl" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
-          <motion.p variants={fadeUp} className="eyebrow text-[var(--gold)]">What We Offer</motion.p>
+          <motion.p variants={fadeUp} className="eyebrow text-[var(--gold)]">Three Pathways. One Philosophy.</motion.p>
           <motion.h2 variants={fadeUp} className="display-title mt-5 text-[var(--inverse)]">
-            Every child needs a different path.
+            Children do not grow in fragments. Their support shouldn't either.
           </motion.h2>
-          <motion.p variants={fadeUp} className="mt-6 max-w-2xl text-lg leading-8 text-white/68">
-            Choose a therapy, or let us coordinate everything into one accountable plan.
+          <motion.p variants={fadeUp} className="mt-6 max-w-3xl text-lg leading-8 text-white/68">
+            Whether the need is home-based coordinated support, school-embedded inclusion, or focused therapy, every JOT Wellness pathway is built around coordination, accountability, and measurable outcomes.
           </motion.p>
         </motion.div>
 
         <motion.div className="mt-16 grid gap-5 lg:grid-cols-4" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
-          <BentoCard large icon="network" title="Guided Growth" subtitle="Complete 12-Month Transformation" text="Full-circle coordination. All therapies. One plan. Monthly reports." cta="Explore Program" page="guided-growth" />
-          <BentoCard icon="book" title="A La Carte Services" subtitle="Pick exactly what you need" text="Seven therapy pathways with licensed specialists at your home." cta="View Services" page="services" />
-          <BentoCard icon="school" title="School Programs" subtitle="From readiness to integration" text="Readiness, teacher alignment, inclusion strategy, and classroom participation." cta="Learn More" page="services" />
-          <BentoCard small icon="heart" title="Family Support" subtitle="Parents included" text="Coaching, workshops, and home routines that make progress sustainable." cta="Connect" page="contact" />
+          <BentoCard large icon="network" title="Guided Growth™" subtitle="Home-delivered child development system" text="One child. One Program Owner. One personalized roadmap connecting therapies, family priorities, school needs, and measurable progress." cta="Learn About Guided Growth" page="guided-growth" />
+          <BentoCard icon="school" title="Holding Canvas™" subtitle="School inclusion ecosystem" text="A school-embedded framework aligning students, teachers, parents, specialists, and leadership around student success." cta="Explore Holding Canvas" page="holding-canvas" />
+          <BentoCard icon="book" title="Individual Therapies" subtitle="Focused specialist support" text="Speech, OT, special education, behaviour support, psychology, and play-based interventions with clear goals." cta="Explore Therapies" page="services" />
+          <BentoCard small icon="heart" title="Family Partnership" subtitle="Parents stay informed" text="Transparent reviews, parent guidance, and honest next steps so families never carry the coordination burden alone." cta="Start Consultation" page="contact" />
         </motion.div>
 
         <motion.div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-7" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }}>
@@ -878,14 +889,14 @@ function FounderSpotlight() {
       </div>
       <motion.div className="founder-right" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}>
         <motion.p variants={fadeUp} className="eyebrow">Meet Khushal Singh</motion.p>
-        <motion.h2 variants={fadeUp} className="display-title mt-5">Category creator. Clinical pioneer.</motion.h2>
+        <motion.h2 variants={fadeUp} className="display-title mt-5">Outcome-based systems for children, families, and schools.</motion.h2>
         <motion.p variants={fadeUp} className="lead-copy mt-7">
-          Khushal Singh founded JOT Wellness to replace fragmented therapy journeys with coordinated care. His work brings together licensed experts, family coaching, school integration, and outcome tracking so parents have one trusted system rather than a collection of appointments.
+          Khushal Singh founded JOT Wellness to replace fragmented support with coordinated systems. His work brings together licensed expertise, family partnership, school inclusion, and outcome tracking so children receive direction instead of disconnected recommendations.
         </motion.p>
         <motion.div variants={stagger} className="credential-grid mt-8">
-          {["Karamveer Chakra", "RCI B86705", "BACB-USA", "800+ Families"].map((item) => <motion.div variants={cardReveal} key={item}>{item}</motion.div>)}
+          {["Karamveer Chakra", "RCI Licensed", "BACB-USA ABA Certified", "1200+ Families"].map((item) => <motion.div variants={cardReveal} key={item}>{item}</motion.div>)}
         </motion.div>
-        <motion.blockquote variants={fadeUp} className="quote-block mt-9">"A child's transformation belongs to coordination."</motion.blockquote>
+        <motion.blockquote variants={fadeUp} className="quote-block mt-9">"Children do not grow in fragments. Their support should not either."</motion.blockquote>
         <motion.button variants={fadeUp} className="btn-forest btn-arrow mt-8" onClick={() => navigateTo("about")}>Read Full Story <span className="arrow-icon">-&gt;</span></motion.button>
       </motion.div>
     </section>
@@ -984,14 +995,14 @@ function AssessmentSection() {
           <motion.p variants={fadeUp} className="eyebrow text-[var(--gold)]">Take the First Step</motion.p>
           <motion.h2 variants={fadeUp} className="display-title mt-5 text-[var(--inverse)]">Your child's journey begins with one call.</motion.h2>
           <motion.p variants={fadeUp} className="mt-6 max-w-xl text-lg leading-8 text-white/72">
-            Free 15-minute assessment. No obligation. We will guide you to the right therapy, program, or next step.
+            Start with a discovery consultation. No pressure. We will help you understand whether Guided Growth™, Holding Canvas™, or individual therapy is the right next step.
           </motion.p>
           <motion.div variants={stagger} className="mt-9 grid gap-4 text-white/82">
             {["Licensed therapist on every call", "Personalized recommendation", "No sales pressure", "Delhi NCR doorstep service"].map((item) => (
               <motion.div variants={fadeUp} key={item} className="check-item">Included: {item}</motion.div>
             ))}
           </motion.div>
-          <motion.a variants={fadeUp} className="whatsapp-link mt-9 inline-flex" href={getWhatsAppUrl("Hello JOT Wellness, I prefer WhatsApp for booking an assessment.")} target="_blank" rel="noreferrer">
+          <motion.a variants={fadeUp} className="whatsapp-link mt-9 inline-flex" href={getWhatsAppUrl("Hello JOT Wellness, I prefer WhatsApp for scheduling a consultation.")} target="_blank" rel="noreferrer">
             Prefer WhatsApp? Message us directly -&gt;
           </motion.a>
         </motion.div>
@@ -1004,7 +1015,7 @@ function AssessmentSection() {
 function ServicesPage() {
   return (
     <>
-      <PageHero eyebrow="What We Offer" title="Our Services" text="Seven specialist therapies. Licensed experts. Your home. Your terms." image={images.therapy} />
+      <PageHero eyebrow="Individual Therapy Services" title="Specialized Support. Licensed Professionals. Measurable Progress." text="Focused, evidence-informed therapy services designed around communication, regulation, learning, participation, emotional well-being, and everyday independence." image={images.therapy} />
       <ServiceAccordion />
       <PricingTable />
       <ServiceModels />
@@ -1086,15 +1097,15 @@ function PricingTable() {
 
 function ServiceModels() {
   const models = [
-    ["A La Carte", "Pick exactly what you need", "Best for targeted support", "white"],
-    ["Guided Growth", "Complete 12-month transformation", "Best for full coordination", "featured"],
-    ["Hybrid", "Flexible coordination with selected therapies", "Best for evolving needs", "sage"],
+    ["Standalone Therapy", "Focused support for a specific area", "Best for targeted needs", "white"],
+    ["Therapy + Guided Growth™", "Therapies coordinated into one developmental roadmap", "Best for families seeking full coordination", "featured"],
+    ["Therapy + Holding Canvas™", "Integrated school-based support", "Best for students needing classroom alignment", "sage"],
   ];
   return (
     <section className="section-pad bg-[var(--warm-white)]">
       <div className="mx-auto max-w-[1240px] px-5 lg:px-8">
         <p className="eyebrow text-center">Service Models</p>
-        <h2 className="display-title mx-auto mt-5 max-w-4xl text-center">Choose the level of coordination your family needs.</h2>
+        <h2 className="display-title mx-auto mt-5 max-w-4xl text-center">Choose the support model that matches your child's next step.</h2>
         <div className="mt-16 grid gap-6 lg:grid-cols-3 lg:items-center">
           {models.map(([name, tagline, best, variant]) => (
             <article key={name} className={`model-card ${variant}`}>
@@ -1116,12 +1127,12 @@ function TherapistTeam() {
   return (
     <section className="section-pad bg-[var(--ivory)]">
       <div className="mx-auto max-w-[1520px] px-5 lg:px-8">
-        <p className="eyebrow">The Clinical Team</p>
-        <h2 className="display-title mt-5">Licensed experts working as one ecosystem.</h2>
+        <p className="eyebrow">Qualified Professionals</p>
+        <h2 className="display-title mt-5">Professional expertise connected by one outcome-focused philosophy.</h2>
         <div className="mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
           {therapists.map(([name, role, license, exp], index) => (
             <article key={name} className="therapist-card">
-              <img src={[images.founder, images.founderAlt, images.therapy, images.classroom][index]} alt={name} />
+              <img src={[images.child, images.therapy, images.classroom, images.parent][index]} alt={name} />
               <div><h3>{name}</h3><p>{role}</p><span>{license}</span><strong>{exp}</strong><button>View Profile -&gt;</button></div>
             </article>
           ))}
@@ -1132,16 +1143,21 @@ function TherapistTeam() {
 }
 
 function GuidedGrowthPage() {
+  const outcomes = [
+    ["One Program Owner", "One accountable professional oversees planning, delivery, communication, and progress monitoring."],
+    ["Written Developmental Roadmap", "Clear goals, clear priorities, clear responsibilities, and measurable outcomes for home and school."],
+    ["Coordinated Professionals", "Speech, OT, special education, behaviour support, psychology, and family guidance work from one plan."],
+    ["Monthly Progress Reviews", "Progress is tracked, documented, discussed, and refined so families always know what happens next."],
+  ];
+
   return (
     <>
-      <PageHero eyebrow="Flagship Program" title="Guided Growth" text="A complete 12-month transformation journey with one plan, one leader, and measurable outcomes." image={images.parent} />
+      <PageHero eyebrow="Guided Growth™" title="India's First Outcome-Based Child Development System." text="Home-delivered, fully coordinated, and built for families who need direction—not disconnected sessions." image={images.parent} />
       <section className="section-pad bg-[var(--warm-white)]">
-        <div className="mx-auto max-w-[1520px] px-5 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-[0.4fr_0.6fr]">
-            <div className="lg:sticky lg:top-28 lg:self-start"><p className="eyebrow">Transformation Journey</p><h2 className="display-title mt-5">From uncertainty to a family roadmap.</h2></div>
-            <div className="grid gap-5 md:grid-cols-2">
-              {guidedSteps.map((step, index) => <article className="growth-step" key={step}><span>0{index + 1}</span><h3>{step}</h3><p>{processSteps[index]?.[2] || "Outcome-focused guidance for the next stage of independence."}</p></article>)}
-            </div>
+        <div className="mx-auto grid max-w-[1520px] gap-12 px-5 lg:grid-cols-[0.4fr_0.6fr] lg:px-8">
+          <div className="lg:sticky lg:top-28 lg:self-start"><p className="eyebrow">One Child. One Plan.</p><h2 className="display-title mt-5">Everything connects to one goal: real-world progress.</h2><p className="lead-copy mt-7">Most families do not need more therapy sessions. They need a system that coordinates professionals, aligns goals, reduces parental burden, and focuses everyone on the same outcomes.</p></div>
+          <div className="grid gap-5 md:grid-cols-2">
+            {outcomes.map(([title, text], index) => <article className="growth-step" key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}
           </div>
         </div>
       </section>
@@ -1151,6 +1167,40 @@ function GuidedGrowthPage() {
   );
 }
 
+function HoldingCanvasPage() {
+  const schoolBenefits = [
+    "Comprehensive inclusion framework",
+    "Teacher training and capacity building",
+    "Assessment, IEP, review, and reporting protocols",
+    "Parent engagement systems",
+    "Reduced teacher burden",
+    "Future-ready inclusion infrastructure",
+  ];
+  const studentBenefits = [
+    "Developmental assessment",
+    "Personalized inclusion roadmap",
+    "Classroom success strategies",
+    "Dedicated case coordination",
+    "Monthly progress reviews",
+    "Transition and future-readiness planning",
+  ];
+
+  return (
+    <>
+      <PageHero eyebrow="Holding Canvas™" title="India's First Outcome-Based School Inclusion Ecosystem." text="A school-embedded system that aligns students, families, teachers, specialists, and leadership around measurable student success." image={images.school} />
+      <section className="section-pad bg-[var(--warm-white)]">
+        <div className="mx-auto grid max-w-[1520px] gap-12 px-5 lg:grid-cols-2 lg:px-8">
+          <div><p className="eyebrow">For Students</p><h2 className="display-title mt-5">Support that belongs inside the school ecosystem.</h2><p className="lead-copy mt-7">Holding Canvas is not a therapy program placed inside a school. It is a coordinated inclusion framework where every stakeholder works from one shared roadmap.</p><div className="mt-8 grid gap-3">{studentBenefits.map((item) => <div className="check-item text-[var(--forest)]" key={item}>✓ {item}</div>)}</div></div>
+          <div className="rounded-[34px] bg-[var(--ivory)] p-8 shadow-[0_24px_70px_rgba(26,46,26,0.1)]"><p className="eyebrow">For Schools</p><h2 className="font-display text-5xl leading-none">Systems, not dependency.</h2><p className="lead-copy mt-5">Most schools receive recommendations. Holding Canvas creates implementation, documentation, teacher confidence, parent communication, and sustainable infrastructure.</p><div className="mt-8 grid gap-3">{schoolBenefits.map((item) => <div className="check-item text-[var(--forest)]" key={item}>✓ {item}</div>)}</div><button className="btn-forest mt-8" onClick={() => navigateTo("contact")}>Schedule School Consultation</button></div>
+        </div>
+      </section>
+      <section className="section-pad section-dark text-[var(--inverse)]"><div className="mx-auto max-w-[1180px] px-5 text-center lg:px-8"><p className="eyebrow text-[var(--gold)]">Vision</p><blockquote className="philosophy-quote">"Inclusion is not a department. It is a culture, a system, and a commitment."</blockquote><p className="mx-auto mt-8 max-w-3xl leading-8 text-white/70">Holding Canvas helps schools move beyond accommodation and toward true inclusion where every child can participate, contribute, belong, and thrive.</p></div></section>
+      <AssessmentSection />
+    </>
+  );
+}
+
+
 function AboutPage() {
   return (
     <>
@@ -1159,24 +1209,25 @@ function AboutPage() {
         <div className="about-hero-content">
           <p className="eyebrow">Founder & Clinical Director</p>
           <h1>Khushal<br />Singh</h1>
-          <div className="tagline-stack"><span>Category Creator.</span><span>Clinical Pioneer.</span><span>Child Development Architect.</span></div>
+          <div className="tagline-stack"><span>RCI Licensed Special Educator.</span><span>BACB-USA ABA Certified.</span><span>Karamveer Chakra Award Recipient.</span></div>
         </div>
       </section>
       <section className="section-pad bg-[var(--warm-white)]">
         <div className="mx-auto grid max-w-[1180px] gap-12 px-5 lg:grid-cols-[1fr_320px] lg:px-8">
           <article className="founder-article">
-            <p>JOT Wellness began with a question families kept asking: why does every part of a child's development journey feel separate? Khushal Singh built the answer as a coordinated system, bringing therapy, education, emotional support, parent coaching, and progress tracking into one ecosystem.</p>
-            <blockquote>Every child deserves a team, not a collection of individuals.</blockquote>
-            <p>His work focuses on autistic, ADHD, neurodivergent, and differently-abled children who deserve plans based on needs instead of labels. The mission is practical and deeply human: help children communicate, participate, regulate, learn, connect, and move toward independence with their family beside them.</p>
-            <p>Today, JOT Wellness supports families across Delhi NCR through licensed experts, home-based services, school collaboration, and the flagship Guided Growth journey.</p>
+            <p>For over seven years, Khushal Singh has worked with children, families, schools, and professionals across diverse developmental and educational settings. Again and again, he saw the same challenge: children receiving support from multiple experts who rarely coordinated, while parents carried the burden of connecting therapy, school, and home.</p>
+            <blockquote>Fragmentation is the enemy of progress. Coordination is the architecture of transformation.</blockquote>
+            <p>Progress slowed not because people lacked expertise, but because the system lacked coordination. JOT Wellness was built as the answer: one shared roadmap, one accountable direction, qualified professionals working together, and outcomes measured through everyday life.</p>
+            <p>That philosophy became Guided Growth™ for families, Holding Canvas™ for schools, and Individual Therapy Services for targeted needs. The mission is simple: ethical practice, transparent communication, family partnership, and systems designed around each child's future.</p>
           </article>
-          <aside className="quick-facts sticky top-28 self-start"><span>Quick Facts</span><strong>Founded: 2019</strong><strong>Based: Delhi NCR</strong><strong>Families: 800+</strong><strong>RCI No. B86705</strong><button onClick={() => navigateTo("contact")}>Book Consultation -&gt;</button></aside>
+          <aside className="quick-facts sticky top-28 self-start"><span>Credentials</span><strong>RCI Licensed Special Educator</strong><strong>BACB-USA ABA Certified</strong><strong>Karamveer Chakra Award Recipient</strong><strong>1200+ Families Served</strong><strong>7+ Years Leadership</strong><button onClick={() => navigateTo("contact")}>Schedule Consultation -&gt;</button></aside>
         </div>
       </section>
-      <section className="section-pad section-dark text-[var(--inverse)]"><div className="mx-auto max-w-[1180px] px-5 text-center lg:px-8"><p className="eyebrow text-[var(--gold)]">Philosophy</p><blockquote className="philosophy-quote">"Every child deserves a team, not a collection of individuals."</blockquote><p className="mx-auto mt-8 max-w-3xl leading-8 text-white/70">Coordination is not administration. It is care design. It is making sure the child, family, therapists, school, and long-term goals are all moving in the same direction.</p><div className="signature">Khushal Singh</div></div></section>
+      <section className="section-pad section-dark text-[var(--inverse)]"><div className="mx-auto max-w-[1180px] px-5 text-center lg:px-8"><p className="eyebrow text-[var(--gold)]">Why JOT Exists</p><blockquote className="philosophy-quote">"Children do not grow in fragments. Their support shouldn't either."</blockquote><p className="mx-auto mt-8 max-w-3xl leading-8 text-white/70">Most families are not looking for more sessions. They are looking for answers, clarity, direction, confidence, and a team they can trust. JOT Wellness brings families, professionals, educators, and schools under one coordinated framework focused on meaningful outcomes.</p><div className="signature">Khushal Singh</div></div></section>
     </>
   );
 }
+
 
 function BlogPage({ slug }: { slug?: string }) {
   const [query, setQuery] = useState("");
@@ -1198,9 +1249,9 @@ function BlogPage({ slug }: { slug?: string }) {
     <>
       <section className="blog-hero">
         <div className="mx-auto max-w-[1520px] px-5 pt-36 lg:px-8">
-          <p className="eyebrow text-[var(--gold)]">Markdown Powered</p>
+          <p className="eyebrow text-[var(--gold)]">Resources</p>
           <h1>Insights.</h1>
-          <p>Practical resources for parents, caregivers, and schools. Add new articles by committing Markdown files to <code>src/content/blog</code>.</p>
+          <p>Practical resources for parents, caregivers, and schools navigating child development, inclusion, therapy, communication, learning, and emotional well-being.</p>
           <input aria-label="Search articles" placeholder="Search parent resources" value={query} onChange={(event) => setQuery(event.target.value)} />
           <div>
             {blogCategories.map((cat) => (
@@ -1288,16 +1339,16 @@ function EmptyBlogState({ query, category }: { query: string; category: string }
 function ContactPage() {
   return (
     <>
-      <PageHero eyebrow="Contact" title="Let's Start Your Child's Journey." text="Book a free assessment, ask a question, or message our Delhi NCR care team." image={images.family} />
+      <PageHero eyebrow="Contact" title="Let's Start Your Child's Journey." text="Book a family discovery consultation, schedule a school partnership call, or message our Delhi NCR care team." image={images.family} />
       <section className="section-pad bg-[var(--warm-white)]">
         <div className="mx-auto grid max-w-[1520px] gap-8 px-5 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
-          <div className="contact-card featured"><h2>Book Free Assessment</h2><AssessmentForm source="contact-assessment" /></div>
+          <div className="contact-card featured"><h2>Schedule Consultation</h2><AssessmentForm source="contact-assessment" /></div>
           <div className="grid gap-8">
-            <div className="contact-card"><h2>General Inquiry</h2><p className="lead-copy">Ask about services, locations, school integration, or Guided Growth.</p><button className="btn-forest mt-5">Send Inquiry -&gt;</button></div>
-            <div className="contact-card"><h2>Direct Contact</h2><a href="tel:+919999999999">+91 99999 99999</a><a href="mailto:care@jotwellness.in">care@jotwellness.in</a><a href={getWhatsAppUrl("Hello JOT Wellness, I want to connect with your care team.")} target="_blank" rel="noreferrer">WhatsApp us</a></div>
+            <div className="contact-card"><h2>General Inquiry</h2><p className="lead-copy">Ask about Guided Growth™, Holding Canvas™, individual therapy services, locations, or school partnerships.</p><button className="btn-forest mt-5">Send Inquiry -&gt;</button></div>
+            <div className="contact-card"><h2>Direct Contact</h2><a href="tel:+917503191998">+91 75031 91998</a><a href="mailto:hello.jotwellness@gmail.com">hello.jotwellness@gmail.com</a><a href={getWhatsAppUrl("Hello JOT Wellness, I want to connect with your care team.")} target="_blank" rel="noreferrer">WhatsApp us</a></div>
           </div>
         </div>
-        <div className="mx-auto mt-12 max-w-[1520px] px-5 lg:px-8"><div className="map-wrap"><iframe title="JOT Wellness Delhi NCR map" src="https://www.google.com/maps?q=New%20Delhi%20India&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /><div>We serve all Delhi NCR<br /><span>New Delhi, Gurugram, Noida, Faridabad</span></div></div></div>
+        <div className="mx-auto mt-12 max-w-[1520px] px-5 lg:px-8"><div className="map-wrap"><iframe title="JOT Wellness Delhi NCR map" src="https://www.google.com/maps?q=New%20Delhi%20India&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /><div>We serve Delhi NCR<br /><span>East Delhi, South Delhi, Noida, Gurugram, Ghaziabad</span></div></div></div>
       </section>
     </>
   );
@@ -1309,7 +1360,7 @@ function FaqPage() {
   return (
     <>
       <PageHero eyebrow="FAQ" title="Your Questions, Answered." text="Everything parents want to know before starting therapy." image={images.child} />
-      <section className="section-pad bg-[var(--warm-white)]"><div className="mx-auto max-w-[980px] px-5 lg:px-8"><div className="faq-tabs" role="tablist">{faqTabs.map((item) => <button role="tab" aria-selected={item.tab === tab} className={item.tab === tab ? "active" : ""} key={item.tab} onClick={() => setTab(item.tab)}>{item.tab}</button>)}</div><div className="mt-10 divide-y divide-[var(--forest)]/10 border-y border-[var(--forest)]/10">{active.items.map(([question, answer]) => <details key={question} className="faq-item"><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div><div className="mt-12 text-center"><h2 className="font-display text-5xl">Still have questions?</h2><div className="mt-6 flex justify-center gap-4"><a className="btn-forest" href={getWhatsAppUrl("Hello JOT Wellness, I have a question.")} target="_blank" rel="noreferrer">WhatsApp Us</a><button className="btn-gold" onClick={() => navigateTo("contact")}>Book Free Assessment</button></div></div></div></section>
+      <section className="section-pad bg-[var(--warm-white)]"><div className="mx-auto max-w-[980px] px-5 lg:px-8"><div className="faq-tabs" role="tablist">{faqTabs.map((item) => <button role="tab" aria-selected={item.tab === tab} className={item.tab === tab ? "active" : ""} key={item.tab} onClick={() => setTab(item.tab)}>{item.tab}</button>)}</div><div className="mt-10 divide-y divide-[var(--forest)]/10 border-y border-[var(--forest)]/10">{active.items.map(([question, answer]) => <details key={question} className="faq-item"><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div><div className="mt-12 text-center"><h2 className="font-display text-5xl">Still have questions?</h2><div className="mt-6 flex justify-center gap-4"><a className="btn-forest" href={getWhatsAppUrl("Hello JOT Wellness, I have a question.")} target="_blank" rel="noreferrer">WhatsApp Us</a><button className="btn-gold" onClick={() => navigateTo("contact")}>Schedule Consultation</button></div></div></div></section>
     </>
   );
 }
@@ -1351,7 +1402,7 @@ function AssessmentForm({ source, inverse = false }: { source: string; inverse?:
 
   return (
     <motion.form className={`assessment-form ${inverse ? "inverse" : ""}`} onSubmit={submitForm} variants={cardReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
-      <div><h3>Book Your Free Assessment</h3><p>Takes 60 seconds. We call within 2 hours.</p></div>
+      <div><h3>Schedule Your Discovery Consultation</h3><p>Tell us what support you need. We will guide the next step.</p></div>
       <div className="grid gap-4 md:grid-cols-2">
         <FloatingInput label="Child's Name" name="childName" value={form.childName} onChange={updateField} />
         <FloatingInput label="Parent's Name" name="parentName" value={form.parentName} onChange={updateField} />
@@ -1360,7 +1411,7 @@ function AssessmentForm({ source, inverse = false }: { source: string; inverse?:
       </div>
       <label className="select-field"><span>Primary Concern</span><select name="concern" value={form.concern} onChange={updateField} required><option value="">Select concern</option><option>Speech</option><option>Behavior</option><option>Learning</option><option>Motor</option><option>Sensory</option><option>Multiple</option><option>Other</option></select></label>
       <div><span className="time-label">Best Time to Call</span><div className="time-options">{["Morning", "Afternoon", "Evening", "Flexible"].map((time) => <button type="button" key={time} className={form.time === time ? "selected" : ""} onClick={() => setForm((current) => ({ ...current, time }))}>{time}<small>{time === "Morning" ? "9-12" : time === "Afternoon" ? "12-4" : time === "Evening" ? "4-6" : "Any"}</small></button>)}</div></div>
-      <button className="btn-gold btn-arrow w-full" disabled={status === "saving"}>{status === "saving" ? "Booking..." : "Book My Free Assessment"} <span className="arrow-icon">-&gt;</span></button>
+      <button className="btn-gold btn-arrow w-full" disabled={status === "saving"}>{status === "saving" ? "Booking..." : "Schedule Consultation"} <span className="arrow-icon">-&gt;</span></button>
       {status === "error" && <p className="text-sm font-semibold text-[var(--gold)]">Saved locally because the live CRM is unavailable. Please use WhatsApp for immediate support.</p>}
       <p className={inverse ? "text-xs text-white/55" : "text-xs text-[var(--text-secondary)]"}>{isFirebaseConfigured ? "Secure Firebase lead capture enabled." : "CRM-ready lead capture. Add Firebase keys for live database sync."}</p>
     </motion.form>
@@ -1398,8 +1449,8 @@ function Footer({ navigate }: { navigate: (page: PageKey) => void }) {
   return (
     <footer className="footer-dark noise-overlay">
       <div className="mx-auto grid max-w-[1520px] gap-12 px-5 py-16 lg:grid-cols-[0.45fr_0.55fr] lg:px-8">
-        <div><BrandLogo inverse /><p className="mt-6 max-w-md leading-8 text-white/66">Supporting the Whole Child. Empowering the Whole Family.</p></div>
-        <div className="grid gap-8 sm:grid-cols-3"><FooterColumn title="Explore" items={navItems.slice(0, 4)} navigate={navigate} /><FooterColumn title="Support" items={navItems.slice(4)} navigate={navigate} /><div><h3>Locations</h3><p>New Delhi<br />Gurugram<br />Noida<br />Faridabad</p></div></div>
+        <div><BrandLogo inverse /><p className="mt-6 max-w-md leading-8 text-white/66">One Team. One Plan. Real Outcomes.</p></div>
+        <div className="grid gap-8 sm:grid-cols-3"><FooterColumn title="Explore" items={navItems.slice(0, 4)} navigate={navigate} /><FooterColumn title="Support" items={navItems.slice(4)} navigate={navigate} /><div><h3>Locations</h3><p>East Delhi<br />South Delhi<br />Noida<br />Gurugram<br />Ghaziabad</p></div></div>
       </div>
     </footer>
   );
@@ -1410,7 +1461,7 @@ function FooterColumn({ title, items, navigate }: { title: string; items: Array<
 }
 
 function FloatingWhatsApp() {
-  return <a className="floating-whatsapp" href={getWhatsAppUrl("Hello JOT Wellness, I would like to book a free assessment.")} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp"><span>Chat on WhatsApp</span><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.8 2 6.8L3.7 29l6.6-1.7c1.8 1 3.8 1.5 5.8 1.5 7.1 0 12.9-5.7 12.9-12.8C29 8.7 23.2 3 16 3Zm0 23.4c-1.9 0-3.6-.5-5.1-1.4l-.4-.2-3.9 1 1-3.8-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7C5.6 10.2 10.3 5.6 16 5.6s10.4 4.6 10.4 10.3S21.7 26.4 16 26.4Zm5.7-7.8c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.5-.5.2-.2.2-.3.3-.5.1-.2.1-.4 0-.5 0-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.9.7.8.2 1.5.2 2.1.1.6-.1 1.8-.7 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4Z" /></svg></a>;
+  return <a className="floating-whatsapp" href={getWhatsAppUrl("Hello JOT Wellness, I would like to schedule a discovery consultation.")} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp"><span>Chat on WhatsApp</span><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.8 2 6.8L3.7 29l6.6-1.7c1.8 1 3.8 1.5 5.8 1.5 7.1 0 12.9-5.7 12.9-12.8C29 8.7 23.2 3 16 3Zm0 23.4c-1.9 0-3.6-.5-5.1-1.4l-.4-.2-3.9 1 1-3.8-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7C5.6 10.2 10.3 5.6 16 5.6s10.4 4.6 10.4 10.3S21.7 26.4 16 26.4Zm5.7-7.8c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.5-.5.2-.2.2-.3.3-.5.1-.2.1-.4 0-.5 0-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.9.7.8.2 1.5.2 2.1.1.6-.1 1.8-.7 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4Z" /></svg></a>;
 }
 
 function CustomCursor() {
