@@ -2422,3 +2422,120 @@ body {
     height: 460px !important;
   }
 }
+
+/* Mobile hero orbit cards: keep stat cards around the portrait without overlap */
+.hero-visual .floating-card,
+.hero-visual .credential-badge {
+  z-index: 3;
+}
+
+.hero-circle {
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  .hero-visual {
+    width: 100%;
+    max-width: 420px;
+    min-height: 470px;
+    margin-inline: auto;
+    overflow: visible;
+  }
+
+  .hero-circle {
+    width: min(78vw, 330px);
+    height: min(78vw, 330px);
+  }
+
+  .hero-visual .floating-card,
+  .hero-visual .credential-badge {
+    transform: none !important;
+    animation: none;
+    border-radius: 18px;
+    padding: 12px 14px;
+    max-width: none;
+    line-height: 1.2;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+  }
+
+  .hero-visual .floating-card strong {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+    line-height: 0.85;
+  }
+
+  .hero-visual .floating-card span,
+  .hero-visual .credential-badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-visual .floating-card:nth-of-type(2) {
+    left: 0 !important;
+    right: auto !important;
+    top: 6% !important;
+    bottom: auto !important;
+    width: 145px;
+  }
+
+  .hero-visual .floating-card:nth-of-type(3) {
+    right: 0 !important;
+    left: auto !important;
+    top: 19% !important;
+    bottom: auto !important;
+    width: 145px;
+  }
+
+  .hero-visual .floating-card:nth-of-type(4) {
+    left: 4% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: 17% !important;
+    width: 168px;
+  }
+
+  .hero-visual .credential-badge {
+    right: 0 !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: 2% !important;
+    width: 210px;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-visual {
+    min-height: 440px;
+    max-width: 360px;
+  }
+
+  .hero-circle {
+    width: 292px;
+    height: 292px;
+  }
+
+  .hero-visual .floating-card:nth-of-type(2) {
+    width: 132px;
+    left: 0 !important;
+    top: 7% !important;
+  }
+
+  .hero-visual .floating-card:nth-of-type(3) {
+    width: 132px;
+    right: 0 !important;
+    top: 21% !important;
+  }
+
+  .hero-visual .floating-card:nth-of-type(4) {
+    width: 150px;
+    left: 2% !important;
+    bottom: 18% !important;
+  }
+
+  .hero-visual .credential-badge {
+    width: 188px;
+    right: 0 !important;
+    bottom: 4% !important;
+  }
+}
