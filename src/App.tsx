@@ -10,8 +10,10 @@ import {
 import { AnimatePresence, motion, useInView, type Variants } from "framer-motion";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db, isFirebaseConfigured } from "./lib/firebase";
+import { blogCategories, blogPosts, featuredBlogPosts, formatBlogDate, getBlogPostBySlug, type BlogPost } from "./lib/blog";
 
 type PageKey = "home" | "services" | "guided-growth" | "about" | "blog" | "contact" | "faq";
+type AppRoute = { page: PageKey; slug?: string };
 type IconName = "network" | "speech" | "hands" | "book" | "ripple" | "heart" | "school" | "shield" | "home" | "chart" | "phone" | "star";
 
 type Service = {
@@ -253,36 +255,6 @@ const testimonials = [
   },
 ];
 
-const blogPosts = [
-  {
-    category: "Autism",
-    title: "What coordination changes in a child's development plan",
-    excerpt: "When behavior, speech, OT, school, and parent coaching align, families stop translating disconnected advice.",
-    image: images.therapy,
-    meta: "By Khushal Singh - 6 min read",
-  },
-  {
-    category: "Speech",
-    title: "Communication is more than words",
-    excerpt: "Gestures, choices, regulation, play, and safety all shape how a child is heard.",
-    image: images.child,
-    meta: "Clinical Team - 4 min read",
-  },
-  {
-    category: "School Readiness",
-    title: "Before inclusion begins, prepare the ecosystem",
-    excerpt: "Readiness includes teachers, parents, routines, sensory needs, confidence, and peer participation.",
-    image: images.school,
-    meta: "Education Team - 5 min read",
-  },
-  {
-    category: "Parenting",
-    title: "How to make home practice feel lighter",
-    excerpt: "Small repeatable routines can build progress without turning home into a therapy room.",
-    image: images.parent,
-    meta: "JOT Wellness - 3 min read",
-  },
-];
 
 const therapists = [
   ["Aarav Mehta", "Behavior Specialist", "BACB Certified", "6 years experience"],
@@ -339,14 +311,19 @@ const stagger: Variants = {
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.08 } },
 };
 
-function getRouteFromHash(): PageKey {
+function getRouteFromHash(): AppRoute {
   const rawHash = window.location.hash.replace(/^#\/?/, "");
-  const route = rawHash.split("?")[0] as PageKey;
-  return pageMeta[route] ? route : "home";
+  const [pageSegment, slugSegment] = rawHash.split("?")[0].split("/");
+  const page = pageSegment as PageKey;
+  return { page: pageMeta[page] ? page : "home", slug: page === "blog" ? slugSegment : undefined };
 }
 
 function navigateTo(page: PageKey) {
   window.location.hash = `/${page}`;
+}
+
+function navigateToBlogPost(slug: string) {
+  window.location.hash = `/blog/${slug}`;
 }
 
 function setMetaTag(name: string, content: string) {
@@ -382,7 +359,7 @@ function scrollToAssessment() {
 }
 
 export default function App() {
-  const [route, setRoute] = useState<PageKey>(getRouteFromHash);
+  const [route, setRoute] = useState<AppRoute>(getRouteFromHash);
 
   useEffect(() => {
     const handleHashChange = () => setRoute(getRouteFromHash());
@@ -392,10 +369,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const meta = pageMeta[route];
-    document.title = meta.title;
-    setMetaTag("description", meta.description);
-    pushAnalyticsEvent({ event: "page_view", page: route });
+    const post = route.page === "blog" ? getBlogPostBySlug(route.slug) : undefined;
+    const meta = pageMeta[route.page];
+    document.title = post ? `${post.title} | JOT Wellness` : meta.title;
+    setMetaTag("description", post?.excerpt ?? meta.description);
+    pushAnalyticsEvent({ event: "page_view", page: route.page, slug: route.slug });
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     const schema = {
@@ -417,10 +395,10 @@ export default function App() {
       document.head.appendChild(script);
     }
     script.textContent = JSON.stringify(schema);
-  }, [route]);
+  }, [route.page, route.slug]);
 
   const page = useMemo(() => {
-    switch (route) {
+    switch (route.page) {
       case "services":
         return <ServicesPage />;
       case "guided-growth":
@@ -428,7 +406,7 @@ export default function App() {
       case "about":
         return <AboutPage />;
       case "blog":
-        return <BlogPage />;
+        return <BlogPage slug={route.slug} />;
       case "contact":
         return <ContactPage />;
       case "faq":
@@ -436,7 +414,7 @@ export default function App() {
       default:
         return <HomePage />;
     }
-  }, [route]);
+  }, [route.page, route.slug]);
 
   return (
     <div className="min-h-screen bg-[var(--warm-white)] text-[var(--forest)]">
@@ -444,11 +422,11 @@ export default function App() {
         Skip to main content
       </a>
       <CustomCursor />
-      <Header route={route} navigate={navigateTo} />
+      <Header route={route.page} navigate={navigateTo} />
       <AnimatePresence mode="wait">
         <motion.main
           id="main"
-          key={route}
+          key={`${route.page}-${route.slug ?? "index"}` }
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
@@ -974,17 +952,25 @@ function BlogPreview() {
   );
 }
 
-function MagazineGrid() {
+function MagazineGrid({ posts = featuredBlogPosts }: { posts?: BlogPost[] }) {
   return (
     <div className="magazine-grid mt-14">
-      {blogPosts.map((post, index) => (
-        <article key={`${post.title}-${index}`} className={`article-card article-${index + 1}`} onClick={() => navigateTo("blog")}>
-          <img src={post.image} alt={post.title} />
+      {posts.map((post, index) => (
+        <article
+          key={post.slug}
+          className={`article-card article-${(index % 4) + 1}`}
+          onClick={() => navigateToBlogPost(post.slug)}
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") navigateToBlogPost(post.slug);
+          }}
+        >
+          <img src={post.image} alt={post.imageAlt} />
           <div>
             <span>{post.category}</span>
             <h3>{post.title}</h3>
             <p>{post.excerpt}</p>
-            <small>{post.meta}</small>
+            <small>{post.author} - {post.readingTime}</small>
           </div>
         </article>
       ))}
@@ -1194,16 +1180,112 @@ function AboutPage() {
   );
 }
 
-function BlogPage() {
-  const categories = ["All", "Autism", "ADHD", "Speech", "OT", "School Readiness", "Parenting"];
+function BlogPage({ slug }: { slug?: string }) {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All");
+
+  if (slug) {
+    const post = getBlogPostBySlug(slug);
+    return post ? <BlogDetailPage post={post} /> : <BlogNotFound slug={slug} />;
+  }
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredPosts = blogPosts.filter((post) => {
+    const matchesCategory = category === "All" || post.category === category;
+    const matchesQuery = !normalizedQuery || [post.title, post.excerpt, post.category, post.author, ...post.tags].join(" ").toLowerCase().includes(normalizedQuery);
+    return matchesCategory && matchesQuery;
+  });
+
   return (
     <>
-      <section className="blog-hero"><div className="mx-auto max-w-[1520px] px-5 pt-36 lg:px-8"><h1>Insights.</h1><p>Practical resources for parents, caregivers, and schools.</p><input aria-label="Search articles" placeholder="Search parent resources" /><div>{categories.map((cat) => <button key={cat}>{cat}</button>)}</div></div></section>
-      <section className="section-pad bg-[var(--warm-white)]"><div className="mx-auto max-w-[1520px] px-5 lg:px-8"><MagazineGrid /></div></section>
+      <section className="blog-hero">
+        <div className="mx-auto max-w-[1520px] px-5 pt-36 lg:px-8">
+          <p className="eyebrow text-[var(--gold)]">Markdown Powered</p>
+          <h1>Insights.</h1>
+          <p>Practical resources for parents, caregivers, and schools. Add new articles by committing Markdown files to <code>src/content/blog</code>.</p>
+          <input aria-label="Search articles" placeholder="Search parent resources" value={query} onChange={(event) => setQuery(event.target.value)} />
+          <div>
+            {blogCategories.map((cat) => (
+              <button className={category === cat ? "active" : ""} key={cat} onClick={() => setCategory(cat)}>{cat}</button>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="section-pad bg-[var(--warm-white)]">
+        <div className="mx-auto max-w-[1520px] px-5 lg:px-8">
+          {filteredPosts.length ? <MagazineGrid posts={filteredPosts} /> : <EmptyBlogState query={query} category={category} />}
+        </div>
+      </section>
       <section className="section-pad bg-[var(--ivory)]"><div className="mx-auto max-w-[1180px] px-5 lg:px-8"><p className="eyebrow">Free Parent Resources</p><h2 className="display-title mt-5">Download tools for calmer next steps.</h2><div className="mt-12 grid gap-5 md:grid-cols-3">{resources.map((resource) => <article className="resource-card" key={resource}><div>PDF</div><h3>{resource}</h3><p>Actionable guidance from the JOT Wellness clinical team.</p><button>Download -&gt;</button></article>)}</div></div></section>
     </>
   );
 }
+
+function BlogDetailPage({ post }: { post: BlogPost }) {
+  const relatedPosts = blogPosts.filter((item) => item.slug !== post.slug && item.category === post.category).slice(0, 3);
+
+  return (
+    <>
+      <article className="blog-detail">
+        <header className="blog-detail-hero noise-overlay">
+          <img src={post.image} alt={post.imageAlt} />
+          <div className="mx-auto max-w-[1180px] px-5 pb-20 pt-36 lg:px-8">
+            <button className="blog-back-link" onClick={() => navigateTo("blog")}>← All articles</button>
+            <p className="eyebrow text-[var(--gold)]">{post.category}</p>
+            <h1>{post.title}</h1>
+            <p>{post.excerpt}</p>
+            <div className="blog-detail-meta">
+              <span>{post.author}</span>
+              <span>{formatBlogDate(post.date)}</span>
+              <span>{post.readingTime}</span>
+            </div>
+          </div>
+        </header>
+        <div className="mx-auto grid max-w-[1180px] gap-10 px-5 py-20 lg:grid-cols-[0.25fr_0.75fr] lg:px-8">
+          <aside className="blog-detail-aside">
+            <strong>In this article</strong>
+            <span>{post.category}</span>
+            {post.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+          </aside>
+          <div className="blog-prose" dangerouslySetInnerHTML={{ __html: post.html }} />
+        </div>
+      </article>
+      {relatedPosts.length > 0 && (
+        <section className="section-pad section-dark text-[var(--inverse)]">
+          <div className="mx-auto max-w-[1520px] px-5 lg:px-8">
+            <p className="eyebrow text-[var(--gold)]">Related Reading</p>
+            <h2 className="display-title mt-5 text-[var(--inverse)]">Continue learning.</h2>
+            <MagazineGrid posts={relatedPosts} />
+          </div>
+        </section>
+      )}
+    </>
+  );
+}
+
+function BlogNotFound({ slug }: { slug: string }) {
+  return (
+    <section className="section-pad bg-[var(--warm-white)] pt-36">
+      <div className="mx-auto max-w-[900px] px-5 text-center lg:px-8">
+        <p className="eyebrow">Article not found</p>
+        <h1 className="display-title mt-5">We could not find that resource.</h1>
+        <p className="lead-copy mt-6">No Markdown file currently publishes the slug <strong>{slug}</strong>.</p>
+        <button className="btn-forest mt-8" onClick={() => navigateTo("blog")}>Back to Blog</button>
+      </div>
+    </section>
+  );
+}
+
+function EmptyBlogState({ query, category }: { query: string; category: string }) {
+  return (
+    <div className="empty-blog-state">
+      <p className="eyebrow">No articles found</p>
+      <h2>Try another search.</h2>
+      <p>No posts matched {query ? `"${query}"` : "your search"} in {category}.</p>
+    </div>
+  );
+}
+
 
 function ContactPage() {
   return (
