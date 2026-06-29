@@ -2119,3 +2119,39 @@ summary:focus-visible {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(2.4rem, 5vw, 4.5rem);
 }
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.brand-logo img {
+  display: block;
+  width: clamp(148px, 13vw, 210px);
+  height: auto;
+  max-height: 58px;
+  object-fit: contain;
+}
+
+.world-header.is-scrolled .brand-logo img {
+  max-height: 48px;
+}
+
+.footer-dark .brand-logo img {
+  width: min(100%, 260px);
+  max-height: none;
+}
+
+.founder-photo-wrap img,
+.founder-left img,
+.about-hero-photo img {
+  object-position: center top;
+}
+
+@media (max-width: 760px) {
+  .brand-logo img {
+    width: 128px;
+    max-height: 42px;
+  }
+}

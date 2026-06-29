@@ -49,10 +49,8 @@ const images = {
     "https://images.pexels.com/photos/8926900/pexels-photo-8926900.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1000&w=1600",
   classroom:
     "https://images.pexels.com/photos/8363040/pexels-photo-8363040.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1000&w=1600",
-  founder:
-    "https://images.pexels.com/photos/15889538/pexels-photo-15889538.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=850",
-  founderAlt:
-    "https://images.pexels.com/photos/31913368/pexels-photo-31913368.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=850",
+  founder: "/khushal-singh-founder.jpg",
+  founderAlt: "/khushal-singh-founder.jpg",
   parent:
     "https://images.pexels.com/photos/16825058/pexels-photo-16825058.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1000&w=1600",
 };
@@ -1391,8 +1389,7 @@ function PageHero({ eyebrow, title, text, image }: { eyebrow: string; title: str
 function BrandLogo({ inverse = false }: { inverse?: boolean }) {
   return (
     <div className={`brand-logo ${inverse ? "inverse" : ""}`}>
-      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" /><path d="M20 34c0-9 6-16 14-16s14 7 14 16" /><path d="M22 40c5 7 15 7 20 0" /><path d="M36 13c8-7 17-6 24-2-2 12-10 18-23 16" /></svg>
-      <span><strong>JOT</strong><em>Wellness</em></span>
+      <img src={inverse ? "/jot-wellness-logo-inverse.png" : "/jot-wellness-logo.png"} alt="JOT Wellness - Beyond Labels" />
     </div>
   );
 }
