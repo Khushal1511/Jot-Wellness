@@ -32,9 +32,76 @@
     <link rel="icon" type="image/png" href="/jot-wellness-favicon.png" />
     <link rel="apple-touch-icon" href="/jot-wellness-favicon.png" />
     <title>JOT Wellness | One Team. One Plan. Real Outcomes.</title>
+    <!-- Structured Data: MedicalClinic + Person -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "MedicalClinic",
+          "@id": "https://jotwellness.in/#clinic",
+          "name": "JOT Wellness – Khushal Singh Special Educator",
+          "url": "https://jotwellness.in",
+          "telephone": "+917503191998",
+          "email": "hello.jotwellness@gmail.com",
+          "description": "Premium ABA therapy, special education, and autism support provided directly at home by certified specialists. Guided Growth for families, Holding Canvas for schools, and individual therapy services across Delhi NCR.",
+          "image": "https://jotwellness.in/jot-wellness-logo.png",
+          "priceRange": "$$",
+          "medicalSpecialty": [
+            "Pediatric",
+            "Psychiatric"
+          ],
+          "areaServed": [
+            { "@type": "City", "name": "East Delhi" },
+            { "@type": "City", "name": "South Delhi" },
+            { "@type": "City", "name": "Noida" },
+            { "@type": "City", "name": "Greater Noida" },
+            { "@type": "City", "name": "Ghaziabad" },
+            { "@type": "City", "name": "Indirapuram" },
+            { "@type": "City", "name": "Vaishali" },
+            { "@type": "City", "name": "Gurugram" }
+          ],
+          "founder": {
+            "@id": "https://jotwellness.in/#khushal-singh"
+          },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "JOT Wellness Services",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Guided Growth™ – Home Child Development System" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Holding Canvas™ – School Inclusion Ecosystem" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Behavior Therapy & ABA" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Speech Therapy" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Occupational Therapy" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Special Education" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sensory Integration" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Counseling & Family Support" } }
+            ]
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://jotwellness.in/#khushal-singh",
+          "name": "Khushal Singh",
+          "jobTitle": "Special Educator & Clinical Director",
+          "description": "RCI Licensed Special Educator, BACB-USA ABA Certified professional, and Karamveer Chakra Award recipient with 7+ years of experience in child development and inclusion.",
+          "url": "https://jotwellness.in",
+          "image": "https://jotwellness.in/khushal-singh-founder.jpg",
+          "hasCredential": [
+            { "@type": "EducationalOccupationalCredential", "credentialCategory": "license", "name": "RCI Licensed Special Educator", "credentialCategory": "RCI Reg. No. B86705" },
+            { "@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "BACB-USA ABA Certified" },
+            { "@type": "EducationalOccupationalCredential", "credentialCategory": "award", "name": "Karamveer Chakra Award" }
+          ],
+          "worksFor": {
+            "@id": "https://jotwellness.in/#clinic"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a13513856de9cda0',t:'MTc4MjczNzYyOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
