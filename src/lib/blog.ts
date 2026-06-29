@@ -89,9 +89,21 @@ function escapeHtml(value: string) {
     .replace(/'/g, "&#039;");
 }
 
+/**
+ * Validate a URL and return it HTML-encoded for use in an href attribute.
+ * safeUrl receives values that have already been HTML-escaped by renderInline
+ * (e.g. & in query-strings arrives as &amp;). We decode those entities first
+ * so the resulting href is a well-formed URL, then re-escape for HTML safety.
+ */
 function safeUrl(value: string) {
-  const trimmed = value.trim();
-  if (/^(https?:|mailto:|tel:|\/|#)/i.test(trimmed)) return escapeHtml(trimmed);
+  // Decode HTML entities that escapeHtml introduced on the raw markdown text
+  const decoded = value.trim()
+    .replace(/&amp;/g, "&")
+    .replace(/&#039;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+  if (/^(https?:|mailto:|tel:|\/|#)/i.test(decoded)) return escapeHtml(decoded);
   return "#";
 }
 
@@ -142,7 +154,9 @@ export function markdownToHtml(markdown: string) {
 
     const heading = trimmed.match(/^(#{1,4})\s+(.+)$/);
     if (heading) {
-      const level = heading[1].length + 1;
+      // Offset by 1: # → h2, ## → h3, ### → h4, #### → h5
+      // h1 is reserved for the page/post <title> rendered above the prose.
+      const level = Math.min(heading[1].length + 1, 5);
       blocks.push(`<h${level}>${renderInline(heading[2])}</h${level}>`);
       continue;
     }
